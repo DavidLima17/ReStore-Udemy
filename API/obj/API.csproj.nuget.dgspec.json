@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\My Google Drive\\vscode_workspace\\asp-and-react\\APP\\ReStore\\API\\API.csproj": {}
+    "D:\\Documents\\workspaces\\vscode_workspace\\asp-and-react\\APP\\ReStore\\API\\API.csproj": {}
   },
   "projects": {
-    "D:\\My Google Drive\\vscode_workspace\\asp-and-react\\APP\\ReStore\\API\\API.csproj": {
+    "D:\\Documents\\workspaces\\vscode_workspace\\asp-and-react\\APP\\ReStore\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\My Google Drive\\vscode_workspace\\asp-and-react\\APP\\ReStore\\API\\API.csproj",
+        "projectUniqueName": "D:\\Documents\\workspaces\\vscode_workspace\\asp-and-react\\APP\\ReStore\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "D:\\My Google Drive\\vscode_workspace\\asp-and-react\\APP\\ReStore\\API\\API.csproj",
+        "projectPath": "D:\\Documents\\workspaces\\vscode_workspace\\asp-and-react\\APP\\ReStore\\API\\API.csproj",
         "packagesPath": "C:\\Users\\David\\.nuget\\packages\\",
-        "outputPath": "D:\\My Google Drive\\vscode_workspace\\asp-and-react\\APP\\ReStore\\API\\obj\\",
+        "outputPath": "D:\\Documents\\workspaces\\vscode_workspace\\asp-and-react\\APP\\ReStore\\API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "D:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -78,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.404\\RuntimeIdentifierGraph.json"
         }
       }
     }

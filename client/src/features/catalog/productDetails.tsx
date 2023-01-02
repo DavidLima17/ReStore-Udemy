@@ -1,26 +1,48 @@
-import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import agent from "../../api/agents";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { Product } from "../../app/models/product";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { currencyFormat } from "../../app/util/util";
+import { addBasketItemAsync, removeBasketItemAsync } from "../Basket/basketSlice";
+import { fetchProductAsync, productSelectors } from "./catalogSlice";
 
 export default function ProductDetailsPage() {
+    const {basket, status} = useAppSelector(state => state.basket);
+    const dispatch = useAppDispatch();
     const {id} = useParams<{id: string}>();
-    const [product, setProduct] = useState<Product | null>();
-    const [loading, setLoading] = useState(true);
+    const product = useAppSelector(state => productSelectors.selectById(state, id));
+    const {status: productStatus} = useAppSelector(state => state.catalog);
+    const [quantity, setQuantity] = useState(0);
+    const item = basket?.items.find(i => i.productId === product?.id);
 
     useEffect(() => {
-        agent.Catalog.details(parseInt(id))
-            .then(response => setProduct(response))
-            .catch(error => console.log(error))
-            .finally(() => setLoading(false));
-    }, [id])
+        if(item) setQuantity(item.quantity);
+        if(!product) dispatch(fetchProductAsync(parseInt(id)));
+    }, [id, item, dispatch, product])
+
+    function handleInputChange(event: any){
+        if(event.target.value >= 0){
+            setQuantity(parseInt(event.target.value));
+        }
+    }
     
-    if(loading) return <LoadingComponent message="Loading Product..."/>
+    function handleUpdateCart(){
+        if(!item || quantity > item.quantity){
+            const updateQuantity = item ? quantity - item.quantity : quantity;
+            dispatch(addBasketItemAsync({productId: product?.id!, quantity: updateQuantity}))
+        } else {
+            const updatedQuantity = item.quantity - quantity;
+            dispatch(removeBasketItemAsync({productId: product?.id!, quantity: updatedQuantity}))
+        }
+    }
+
+    if(productStatus.includes('pending')) return <LoadingComponent message="Loading Product..."/>
 
     if(!product) return <NotFound />
+    
 
 
     return(
@@ -31,7 +53,7 @@ export default function ProductDetailsPage() {
             <Grid item xs={6}>
                 <Typography variant="h3">{product.name}</Typography>
                 <Divider sx={{mb: 2}} />
-                <Typography variant="h4" color='secondary'>${(product.price / 100).toFixed(2)}</Typography>
+                <Typography variant="h4" color='secondary'>{currencyFormat(product.price)}</Typography>
                 <TableContainer>
                     <Table>
                         <TableBody>
@@ -58,6 +80,28 @@ export default function ProductDetailsPage() {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                <Grid container spacing={2}>
+                    <Grid item xs={6}>
+                        <TextField onChange={handleInputChange}
+                                   variant='outlined' 
+                                   type='number' 
+                                   label='Quantity in Cart'
+                                   fullWidth
+                                   value={quantity} />
+                    </Grid>
+                    <Grid item xs={6}>
+                        <LoadingButton sx={{height: '55px'}}
+                                       disabled={(item?.quantity === quantity) || (!item && quantity === 0)}
+                                       loading={status.includes('pending')}
+                                       onClick={handleUpdateCart}
+                                       color='primary'
+                                       size='large'
+                                       variant='contained'
+                                       fullWidth>
+                            {item ? 'Update Quantity' : 'Add to Cart'}
+                        </LoadingButton>
+                    </Grid>
+                </Grid>
             </Grid>
         </Grid>
     )
